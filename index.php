@@ -2,32 +2,34 @@
 require_once '_connec.php';
 $pdo = new \PDO(DSN, USER, PASS);
 
-$firstname = trim($_POST['firstname']);
-var_dump($firstname);
+
+/*$firstname = trim($_POST['firstname']);
 $lastname = trim($_POST['lastname']);
-var_dump($lastname);
 $query = "INSERT INTO The_Friends (firstname, lastname) VALUES ('$firstname', '$lastname')";
-$pdo->exec($query);
+$pdo->exec($query);*/
 
 $query = "SELECT * FROM The_Friends";
 $statement = $pdo->query($query);
 $friends = $statement->fetchAll();
 
-function savefriend(array $friend): void
-{
-    $connection = createConnection();
-    $query = "INSERT INTO recipe (id, title, description) VALUES (:id, :title, :description)";
-    $statement = $connection->prepare($query);
-    $statement ->bindValue('id', $friend['id']);
-    $statement ->bindValue('title', $friend['title']);
-    $statement ->bindValue('description', $friend['description']);
-    $statement ->execute();
-    
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $firstname = trim($_POST['firstname']);
+    $lastname = trim($_POST['lastname']);
+    $friend = array_map('trim', $_POST);
+
+    if(strlen($friends['firstname']) > $maxTitleLength) {
+        $errors[] = 'Le first name doit faire moins de ' . $maxTitleLength;
+    }
+    $maxTitleLength = 45;
+    if(strlen($friends['lastname'])) {
+        $errors[] = 'Le last name doit faire moins de' . $maxTitleLength;
+    }
+    if(empty($errors)) {
+     $query = "INSERT INTO friend(firstname, lastname) VALUES ('$firstname', '$lastname')";
+     header('Location: index.php');
+    }
 }
-function createConnection(): PDO
-{
-    return new PDO(DSN, USER, PASS);
-}
+
 
 
 ?>
