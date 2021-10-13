@@ -3,11 +3,6 @@ require_once '_connec.php';
 $pdo = new \PDO(DSN, USER, PASS);
 
 
-/*$firstname = trim($_POST['firstname']);
-$lastname = trim($_POST['lastname']);
-$query = "INSERT INTO The_Friends (firstname, lastname) VALUES ('$firstname', '$lastname')";
-$pdo->exec($query);*/
-
 $query = "SELECT * FROM The_Friends";
 $statement = $pdo->query($query);
 $friends = $statement->fetchAll();
